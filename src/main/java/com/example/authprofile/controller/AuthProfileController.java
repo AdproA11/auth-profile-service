@@ -11,6 +11,7 @@ public class AuthProfileController {
     @GetMapping("/")
     @ResponseBody
     public String addProfile() {
-        return "<h1>Hello World</h1>";
+        return "<h1><a href=\"https://www.youtube.com/watch?v=dQw4w9WgXcQ\">Hello World</a></h1>";
     }
+
 }
