@@ -11,6 +11,6 @@ ENV JDBC_DATABASE_USERNAME ${JDBC_DATABASE_USERNAME}
 
 WORKDIR /app
 RUN ls -al
-COPY ./AUTH-PROFILE-SERVICE-0.0.1-SNAPSHOT.jar /app
+COPY ./authprofile-0.0.1-SNAPSHOT.jar /app
 EXPOSE 8080
-CMD ["java","-jar","AUTH-PROFILE-SERVICE-0.0.1-SNAPSHOT.jar"]
+CMD ["java","-jar","authprofile-0.0.1-SNAPSHOT.jar"]
