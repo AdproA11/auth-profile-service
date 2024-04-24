@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>You're Logged in inside the app</title>
+
+</head>
+
+<body>
+
+    <button th:onclick="see();">See user list</button>
+
+</body>
+<script th:inline="javascript">
+    const token = /*[[${token}]]*/ '';
+    localStorage.setItem('token', token);
+</script>
+<script type="text/javascript">
+    function see() {
+        const savedToken = localStorage.getItem('token');
+
+        fetch('../../user/list', {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + savedToken,
+                'Content-Type': 'application/json'
+            },
+            redirect: 'follow',
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                console.log(response)
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+            });
+        window.location.href = "../../user/list";
+    }
+</script>
+
+</html>
