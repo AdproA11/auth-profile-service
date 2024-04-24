@@ -1,7 +1,6 @@
 package com.example.authprofile.security;
 
 import com.example.authprofile.service.UserService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,12 +13,14 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
     private UserService userDetailsService;
+
     private JWTAuthEntryPoint authEntryPoint;
 
     @Autowired
@@ -44,7 +45,7 @@ public class SecurityConfig {
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic();
-
+        http.addFilterBefore(jwtAuthFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
@@ -58,5 +59,10 @@ public class SecurityConfig {
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public JWTAuthFilter jwtAuthFilter() {
+        return new JWTAuthFilter();
     }
 }
