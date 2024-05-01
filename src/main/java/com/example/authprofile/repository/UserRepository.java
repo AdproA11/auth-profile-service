@@ -7,6 +7,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.example.authprofile.model.UserEntity;
+import com.example.authprofile.model.Builder.UserBuilder;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -19,13 +20,16 @@ public class UserRepository {
 
     @Autowired
     public UserRepository() {
-        PasswordEncoder pe = new BCryptPasswordEncoder();
-        UserEntity newUser = new UserEntity();
-        newUser.setUsername("user");
-        newUser.setPassword(pe.encode("pass"));
-        newUser.setType("ADMIN");
-        userData.add(newUser);
-        System.out.println("zczc " + userData.getFirst());
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+        UserEntity user1 = new UserBuilder("John Doe", "johndoe", passwordEncoder.encode("password"), "1234 Elm St",
+                "1234567890", "BUYER").build();
+
+        UserEntity user2 = new UserBuilder("Jane Doe", "janedoe", passwordEncoder.encode("password"), "1234 Elm St",
+                "123489643", "ADMIN").build();
+
+        userData.add(user1);
+        userData.add(user2);
     }
 
     public UserEntity createUser(UserEntity newUser) {
@@ -47,11 +51,15 @@ public class UserRepository {
     }
 
     public UserEntity update(String username, UserEntity updatedUser) {
-        for (int i = 0; i < userData.size(); i++) {
-            UserEntity user = userData.get(i);
-            if (user.getUsername().equals(username)) {
-                userData.set(i, updatedUser);
-                return updatedUser;
+        for (UserEntity User : userData) {
+            if (User.getUsername().equals(username)) {
+                User.setName(updatedUser.getName());
+                User.setUsername(updatedUser.getUsername());
+                User.setPassword(updatedUser.getPassword());
+                User.setAddress(updatedUser.getAddress());
+                User.setPhoneNumber(updatedUser.getPhoneNumber());
+                User.setType(updatedUser.getType());
+                return User;
             }
         }
         return null;

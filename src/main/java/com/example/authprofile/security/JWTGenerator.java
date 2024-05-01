@@ -23,7 +23,7 @@ public class JWTGenerator {
                 .signWith(SignatureAlgorithm.HS512, "secret")
                 .compact();
         System.out.println("New token :");
-        System.out.println(token);
+        System.out.println("token is " + token);
         return token;
     }
 

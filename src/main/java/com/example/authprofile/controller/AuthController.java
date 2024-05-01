@@ -90,12 +90,4 @@ public class AuthController {
         return new ResponseEntity<>("User registered success!", HttpStatus.OK);
     }
 
-    @GetMapping("/get-user")
-    public UserEntity getUserInfo() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        UserDetails jwtUser = (UserDetails) auth.getPrincipal();
-        UserEntity user = userService.findByUsername(jwtUser.getUsername());
-        return user;
-    }
-
 }

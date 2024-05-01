@@ -13,16 +13,19 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Controller
+@RestController
 @RequestMapping("/user")
 public class UserController {
     String createHTML = "userCreate";
     String listHTML = "userList";
+
+    String editHTML = "edituser";
 
     @Autowired
     private UserService userService;
@@ -42,32 +45,36 @@ public class UserController {
     }
 
     @GetMapping("/list")
-    public String userListPage(Model model) {
+    public ModelAndView userListPage(Model model) {
         List<UserEntity> allUsers = userService.findAll();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         UserDetails jwtUser = (UserDetails) auth.getPrincipal();
         UserEntity user = userService.findByUsername(jwtUser.getUsername());
-        System.out.println("user username is " + user.getUsername());
-        model.addAttribute("userlogedin", user);
-        model.addAttribute("users", allUsers);
-        return listHTML;
+        System.out.println("user username on /list is " + user.getUsername());
+        ModelAndView modelAndView = new ModelAndView(listHTML);
+        modelAndView.addObject("userlogedin", user);
+        modelAndView.addObject("users", allUsers);
+        return modelAndView;
     }
 
     @GetMapping(value = "/edit/{userId}")
-    public String editProductPage(Model model, @PathVariable("userId") String username) {
+    public ModelAndView editProductPage(Model model, @PathVariable("userId") String username) {
         UserEntity user = userService.findByUsername(username);
         if (user != null) {
+            ModelAndView modelAndView = new ModelAndView(editHTML);
             model.addAttribute("user", user);
-            return "edituser";
+            return modelAndView;
         }
-        return "redirect:../list";
+        ModelAndView modelAndView = new ModelAndView(listHTML);
+        modelAndView.addObject("user", user);
+        return modelAndView;
     }
 
     @PostMapping("/edit")
-    public String editProductPost(@ModelAttribute("user") UserEntity user, Model model) {
-        System.out.println("user username edit is " + user.getUsername());
+    public ResponseEntity<UserEntity> editProductPost(@ModelAttribute("user") UserEntity user, Model model) {
+        System.out.println("user username on /edit is " + user.getUsername());
         userService.update(user.getUsername(), user);
-        return "redirect:list";
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @GetMapping("/get-username")
@@ -75,7 +82,7 @@ public class UserController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         UserDetails jwtUser = (UserDetails) auth.getPrincipal();
         UserEntity user = userService.findByUsername(jwtUser.getUsername());
-        return new ResponseEntity<String>(jwtUser.getUsername(), HttpStatus.OK);
+        return new ResponseEntity<String>(user.getUsername(), HttpStatus.OK);
     }
 
     @GetMapping("/get-role")
