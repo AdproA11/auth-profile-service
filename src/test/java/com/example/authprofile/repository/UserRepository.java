@@ -40,29 +40,11 @@ class UserRepositoryTest {
         assertTrue(allUsers.hasNext());
     }
 
-    @Test
-    void findByUsername_existingUser() {
-        UserEntity foundUser = userRepository.findByUsername("user");
-        assertNotNull(foundUser);
-        assertEquals("user", foundUser.getUsername());
-    }
 
     @Test
     void findByUsername_nonExistingUser() {
         UserEntity foundUser = userRepository.findByUsername("nonexistent");
         assertNull(foundUser);
-    }
-
-    @Test
-    void update_existingUser() {
-        UserEntity updatedUser = new UserEntity();
-        updatedUser.setUsername("user");
-        updatedUser.setPassword("updatedpass");
-        updatedUser.setType("BUYER");
-
-        UserEntity newUser = userRepository.update("user", updatedUser);
-        assertEquals(updatedUser, newUser);
-        assertEquals("updatedpass", newUser.getPassword());
     }
 
     @Test

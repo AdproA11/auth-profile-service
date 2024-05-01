@@ -40,38 +40,27 @@ public class UserController {
     @PostMapping("/create")
     public String createUserPost(@ModelAttribute("product") UserEntity user, Model model) {
         userService.create(user);
-        return "redirect:/user/list";
+        return listHTML;
     }
 
     @GetMapping("/list")
     public ModelAndView userListPage(Model model) {
-        List<UserEntity> allUsers = userService.findAll();
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        UserDetails jwtUser = (UserDetails) auth.getPrincipal();
-        UserEntity user = userService.findByUsername(jwtUser.getUsername());
-        System.out.println("user username on /list is " + user.getUsername());
+        List<UserEntity> users = userService.findAll();
         ModelAndView modelAndView = new ModelAndView(listHTML);
-        modelAndView.addObject("userlogedin", user);
-        modelAndView.addObject("users", allUsers);
+        model.addAttribute("users", users);
         return modelAndView;
     }
 
     @GetMapping(value = "/edit/{userId}")
     public ModelAndView editProductPage(Model model, @PathVariable("userId") String username) {
         UserEntity user = userService.findByUsername(username);
-        if (user != null) {
-            ModelAndView modelAndView = new ModelAndView(editHTML);
-            model.addAttribute("user", user);
-            return modelAndView;
-        }
-        ModelAndView modelAndView = new ModelAndView(listHTML);
-        modelAndView.addObject("user", user);
+        model.addAttribute("user", user);
+        ModelAndView modelAndView = new ModelAndView(editHTML);
         return modelAndView;
     }
 
     @PostMapping("/edit")
     public ResponseEntity<UserEntity> editProductPost(@ModelAttribute("user") UserEntity user, Model model) {
-        System.out.println("user username on /edit is " + user.getUsername());
         userService.update(user.getUsername(), user);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
