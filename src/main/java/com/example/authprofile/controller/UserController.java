@@ -22,9 +22,9 @@ import java.util.Map;
 @RestController
 @RequestMapping("/user")
 public class UserController {
+
     String createHTML = "userCreate";
     String listHTML = "userList";
-
     String editHTML = "edituser";
 
     @Autowired
@@ -34,14 +34,13 @@ public class UserController {
     public String createUserPage(Model model) {
         UserEntity user = new UserEntity();
         model.addAttribute("user", user);
-        model.addAttribute("types", UserType.getAll());
         return createHTML;
     }
 
     @PostMapping("/create")
     public String createUserPost(@ModelAttribute("product") UserEntity user, Model model) {
         userService.create(user);
-        return "redirect:list";
+        return "redirect:/user/list";
     }
 
     @GetMapping("/list")

@@ -27,6 +27,10 @@ public class JWTAuthFilter extends OncePerRequestFilter {
             FilterChain filterChain) throws ServletException, IOException {
         String token = getJWTFromRequest(request);
         System.out.println("jwtauthfilter.doFilterInternal token is " + token);
+        if (token == null) {
+            filterChain.doFilter(request, response);
+            return;
+        }
         if (StringUtils.hasText(token) && tokenGenerator.validateToken(token)) {
             String username = tokenGenerator.getUsernameFromJWT(token);
 

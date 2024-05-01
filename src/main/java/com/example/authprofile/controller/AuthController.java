@@ -59,18 +59,37 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ModelAndView login(@ModelAttribute LoginDto loginDto, Model model) {
-        System.out.println("after login " + loginDto.getUsername());
+    public ResponseEntity<AuthResponseDto> login(@RequestBody LoginDto loginDto, Model model) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginDto.getUsername(),
                         loginDto.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = jwtGenerator.generateToken(authentication);
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("postlogin.html");
-        model.addAttribute("token", token);
-        return modelAndView;
+        if (token == null) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        return new ResponseEntity<>(new AuthResponseDto(token), HttpStatus.OK);
+    }
+
+    @PostMapping("/login-redirect")
+    public ModelAndView loginRedirect(@RequestBody LoginDto loginDto, Model model) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        loginDto.getUsername(),
+                        loginDto.getPassword()));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String token = jwtGenerator.generateToken(authentication);
+        if (token == null) {
+            return new ModelAndView("login.html");
+        }
+        return new ModelAndView("redirect:/profile");
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout() {
+        SecurityContextHolder.clearContext();
+        return new ResponseEntity<>("Logout success!", HttpStatus.OK);
     }
 
     @PostMapping("/register")
