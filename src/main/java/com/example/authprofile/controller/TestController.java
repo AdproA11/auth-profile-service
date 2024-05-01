@@ -6,12 +6,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping("/")
-public class AuthProfileController {
+@RequestMapping("/p")
+public class TestController {
     @GetMapping("/")
     @ResponseBody
-    public String addProfile() {
+    public String testYoutube() {
         return "<h1><a href=\"https://www.youtube.com/watch?v=dQw4w9WgXcQ\">Hello World</a></h1>";
     }
-
 }

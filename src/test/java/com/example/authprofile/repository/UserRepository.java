@@ -6,6 +6,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.example.authprofile.model.UserEntity;
+import com.example.authprofile.repository.UserRepository;
 
 import java.util.Iterator;
 
@@ -83,6 +84,6 @@ class UserRepositoryTest {
     @Test
     void delete_nonExistingUser() {
         userRepository.delete("nonexistent");
-        // Ensure no exception occurs when trying to delete a non-existing user
+        assertNull(userRepository.findByUsername("nonexistent"));
     }
 }

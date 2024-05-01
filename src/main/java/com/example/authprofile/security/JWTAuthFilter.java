@@ -41,7 +41,7 @@ public class JWTAuthFilter extends OncePerRequestFilter {
     }
 
     private String getJWTFromRequest(HttpServletRequest request) {
-        System.out.println(request.getHeader("Authorization"));
+        System.out.println("autorization stuffs " + request.getHeader("Authorization"));
         String bearerToken = request.getHeader("Authorization");
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7, bearerToken.length());

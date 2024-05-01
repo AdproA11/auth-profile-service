@@ -47,7 +47,7 @@ public class UserController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         UserDetails jwtUser = (UserDetails) auth.getPrincipal();
         UserEntity user = userService.findByUsername(jwtUser.getUsername());
-        System.out.println(user.getUsername());
+        System.out.println("user username is " + user.getUsername());
         model.addAttribute("userlogedin", user);
         model.addAttribute("users", allUsers);
         return listHTML;
@@ -65,7 +65,7 @@ public class UserController {
 
     @PostMapping("/edit")
     public String editProductPost(@ModelAttribute("user") UserEntity user, Model model) {
-        System.out.println(user.getUsername());
+        System.out.println("user username edit is " + user.getUsername());
         userService.update(user.getUsername(), user);
         return "redirect:list";
     }
