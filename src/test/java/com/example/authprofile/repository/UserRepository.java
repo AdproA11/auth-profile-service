@@ -7,7 +7,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.example.authprofile.model.UserEntity;
 import com.example.authprofile.repository.UserRepository;
-
 import java.util.Iterator;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -39,7 +38,6 @@ class UserRepositoryTest {
         assertNotNull(allUsers);
         assertTrue(allUsers.hasNext());
     }
-
 
     @Test
     void findByUsername_nonExistingUser() {

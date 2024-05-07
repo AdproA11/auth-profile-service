@@ -93,20 +93,30 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody RegisterDto registerDto) {
+    public ResponseEntity<AuthResponseDto> register(@RequestBody RegisterDto registerDto) {
         if (userRepository.findByUsername(registerDto.getUsername()) != null) {
-            return new ResponseEntity<>("Username is taken!", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
 
         UserEntity user = userEntityBuilder.reset()
                 .addUsername(registerDto.getUsername())
-                .addPassword(passwordEncoder.encode((registerDto.getPassword())))
+                .addPassword(passwordEncoder.encode(registerDto.getPassword()))
                 .addType(registerDto.getType())
                 .build();
 
         userRepository.createUser(user);
 
-        return new ResponseEntity<>("User registered success!", HttpStatus.OK);
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        registerDto.getUsername(),
+                        registerDto.getPassword()));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String token = jwtGenerator.generateToken(authentication);
+        if (token == null) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        return new ResponseEntity<>(new AuthResponseDto(token), HttpStatus.OK);
     }
 
 }
