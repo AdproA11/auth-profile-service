@@ -2,11 +2,9 @@ package com.example.authprofile.repository;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.example.authprofile.model.UserEntity;
-import com.example.authprofile.repository.UserRepository;
+
 import java.util.Iterator;
 
 import static org.junit.jupiter.api.Assertions.*;

@@ -48,7 +48,7 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/get-username")
+    @GetMapping("/current-username")
     public ResponseEntity<String> getUsername() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         UserDetails jwtUser = (UserDetails) auth.getPrincipal();
@@ -56,7 +56,7 @@ public class UserController {
         return new ResponseEntity<>(user.getUsername(), HttpStatus.OK);
     }
 
-    @GetMapping("/get-role")
+    @GetMapping("/current-role")
     public ResponseEntity<String> getUsernameAndRole() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         UserDetails jwtUser = (UserDetails) auth.getPrincipal();

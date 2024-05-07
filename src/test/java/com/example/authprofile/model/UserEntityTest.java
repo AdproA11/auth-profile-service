@@ -4,9 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.example.authprofile.model.UserEntity;
-
-public class UserEntity {
+public class UserEntityTest {
     private UserEntity userEntity;
 
     @BeforeEach
