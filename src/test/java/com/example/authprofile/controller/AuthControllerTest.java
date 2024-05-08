@@ -5,10 +5,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.example.authprofile.model.Builder.UserBuilder;
-import com.example.authprofile.model.UserEntity;
-import com.example.authprofile.model.dto.AuthResponseDto;
 import com.example.authprofile.model.dto.LoginDto;
-import com.example.authprofile.model.dto.RegisterDto;
 import com.example.authprofile.repository.UserRepository;
 import com.example.authprofile.security.JWTGenerator;
 import com.example.authprofile.service.UserService;
@@ -21,7 +18,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
