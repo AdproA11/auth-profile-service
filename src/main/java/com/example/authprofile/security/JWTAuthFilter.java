@@ -52,4 +52,12 @@ public class JWTAuthFilter extends OncePerRequestFilter {
         }
         return null;
     }
+
+    public void setTokenGenerator(JWTGenerator tokenGenerator2) {
+        this.tokenGenerator = tokenGenerator2;
+    }
+
+    public void setCustomUserDetailsService(UserDetailsService userDetailsService) {
+        this.customUserDetailsService = userDetailsService;
+    }
 }
