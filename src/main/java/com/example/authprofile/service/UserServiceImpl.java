@@ -84,4 +84,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         roles.add(type);
         return roles.stream().map(role -> new SimpleGrantedAuthority(type)).collect(Collectors.toList());
     }
+
+    public void setUserRepository(UserRepository userRepository2) {
+        this.userRepository = userRepository2;
+    }
 }
