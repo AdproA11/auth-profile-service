@@ -28,13 +28,24 @@ public class JWTAuthEntryPoint implements AuthenticationEntryPoint {
             AuthenticationException authException) throws IOException, ServletException {
         if (HttpStatus.NOT_FOUND.value() == response.getStatus()) {
             meterRegistry.counter("app.errors", "type", "404").increment();
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, authException.getMessage());
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    authException.getMessage());
         } else if (HttpStatus.FORBIDDEN.value() == response.getStatus()) {
             meterRegistry.counter("app.errors", "type", "403").increment();
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, authException.getMessage());
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                    authException.getMessage());
+        } else if (HttpStatus.UNAUTHORIZED.value() == response.getStatus()) {
+            meterRegistry.counter("app.errors", "type", "401").increment();
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
+                    authException.getMessage());
+        } else if (HttpStatus.BAD_REQUEST.value() == response.getStatus()) {
+            meterRegistry.counter("app.errors", "type", "400").increment();
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    authException.getMessage());
         } else {
-            meterRegistry.counter("app.errors", "type", "other").increment();
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized", authException);
+            meterRegistry.counter("app.errors", "type", "500").increment();
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    authException.getMessage());
         }
     }
 }
