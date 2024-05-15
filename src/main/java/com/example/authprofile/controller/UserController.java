@@ -63,4 +63,12 @@ public class UserController {
         UserEntity user = userService.findByUsername(jwtUser.getUsername());
         return new ResponseEntity<>(user.getType().toString(), HttpStatus.OK);
     }
+
+    @GetMapping("/current-user")
+    public ResponseEntity<UserEntity> getCurrentUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails jwtUser = (UserDetails) auth.getPrincipal();
+        UserEntity user = userService.findByUsername(jwtUser.getUsername());
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
 }
