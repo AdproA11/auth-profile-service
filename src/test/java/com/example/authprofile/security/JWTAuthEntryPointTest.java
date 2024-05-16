@@ -53,9 +53,9 @@ public class JWTAuthEntryPointTest {
 
     @Test
     public void testOtherErrorsHandling() {
-        when(response.getStatus()).thenReturn(HttpStatus.UNAUTHORIZED.value());
+        when(response.getStatus()).thenReturn(HttpStatus.INTERNAL_SERVER_ERROR.value());
         Counter counter = mock(Counter.class);
-        when(meterRegistry.counter("app.errors", "type", "other")).thenReturn(counter);
+        when(meterRegistry.counter("app.errors", "type", "500")).thenReturn(counter);
 
         assertThrows(ResponseStatusException.class, () -> entryPoint.commence(request, response, authException));
         verify(counter, times(1)).increment();
