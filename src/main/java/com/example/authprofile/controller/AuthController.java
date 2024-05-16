@@ -43,9 +43,6 @@ public class AuthController {
 
     private JWTGenerator jwtGenerator;
 
-    @Autowired
-    private UserService userService;
-
     @GetMapping("/login")
     public ModelAndView login(Model model) {
         LoginDto loginDto = new LoginDto();
