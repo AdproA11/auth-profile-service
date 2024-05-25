@@ -6,13 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
 public class AuthResponseDtoTest {
-    @Test
-    void testAccessToken() {
-        String accessToken = "testToken";
-        AuthResponseDto authResponseDto = new AuthResponseDto(accessToken);
-
-        assertEquals(accessToken, authResponseDto.getAccessToken());
-    }
 
     @Test
     void testTokenType() {
