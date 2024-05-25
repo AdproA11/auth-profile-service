@@ -23,19 +23,20 @@ import org.springframework.web.servlet.ModelAndView;
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
+
     @Autowired
     public AuthController(AuthenticationManager authenticationManager,
-            UserRepository userRepository,
+            UserService userService,
             PasswordEncoder passwordEncoder,
             JWTGenerator jwtGenerator) {
         this.authenticationManager = authenticationManager;
-        this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.userService = userService;
         this.jwtGenerator = jwtGenerator;
     }
 
     private AuthenticationManager authenticationManager;
-    private UserRepository userRepository;
+    private UserService userService;
     private PasswordEncoder passwordEncoder;
 
     @Autowired
@@ -88,30 +89,21 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<AuthResponseDto> register(@RequestBody RegisterDto registerDto) {
-        if (userRepository.findByUsername(registerDto.getUsername()) != null) {
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
+    public ResponseEntity<String> register(@RequestBody RegisterDto registerDto) {
+        if (userService.findByUsername(registerDto.getUsername()).isPresent()) {
+            return new ResponseEntity<>("Username is taken!", HttpStatus.BAD_REQUEST);
         }
 
         UserEntity user = userEntityBuilder.reset()
                 .addUsername(registerDto.getUsername())
                 .addPassword(passwordEncoder.encode(registerDto.getPassword()))
                 .addType(registerDto.getType())
+                .addName(registerDto.getName())
                 .build();
 
-        userRepository.createUser(user);
+        userService.create(user);
 
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        registerDto.getUsername(),
-                        registerDto.getPassword()));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String token = jwtGenerator.generateToken(authentication);
-        if (token == null) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
-
-        return new ResponseEntity<>(new AuthResponseDto(token), HttpStatus.OK);
+        return new ResponseEntity<>("User registered success!", HttpStatus.OK);
     }
 
 }

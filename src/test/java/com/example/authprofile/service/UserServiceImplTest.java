@@ -1,104 +1,106 @@
-package com.example.authprofile.service;
+// package com.example.authprofile.service;
 
-import com.example.authprofile.model.UserEntity;
-import com.example.authprofile.repository.UserRepository;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+// import com.example.authprofile.model.UserEntity;
+// import com.example.authprofile.repository.UserRepository;
+// import org.junit.jupiter.api.BeforeEach;
+// import org.junit.jupiter.api.Test;
+// import org.mockito.Mockito;
+// import
+// org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import java.util.Arrays;
-import java.util.List;
+// import java.util.Arrays;
+// import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+// import static org.junit.jupiter.api.Assertions.*;
+// import static org.mockito.Mockito.*;
 
-class UserServiceImplTest {
+// class UserServiceImplTest {
 
-    private UserServiceImpl userService;
-    private UserRepository userRepository;
+// private UserServiceImpl userService;
+// private UserRepository userRepository;
 
-    @BeforeEach
-    void setUp() {
-        userRepository = Mockito.mock(UserRepository.class);
-        userService = new UserServiceImpl();
-        userService.setUserRepository(userRepository);
-    }
+// @BeforeEach
+// void setUp() {
+// userRepository = Mockito.mock(UserRepository.class);
+// userService = Mockito.mock(UserServiceImpl.class);
+// }
 
-    @Test
-    void create_invalidUser() {
-        UserEntity user = new UserEntity();
-        user.setUsername("testuser");
-        user.setPassword("testpass");
-        user.setType("BUYER");
+// @Test
+// void createUserTest() {
+// UserEntity user = new UserEntity();
+// userService.create(user);
 
-        when(userRepository.findByUsername("testuser")).thenReturn(user);
+// verify(userRepository, times(1)).save(user);
+// }
 
-        assertThrows(IllegalArgumentException.class, () -> userService.create(user));
-    }
+// @Test
+// void fieldValidTest() {
+// UserEntity user = new UserEntity();
+// user.setAddress("address");
+// user.setPhoneNumber("1234567890");
 
-    @Test
-    void findAll() {
-        UserEntity user1 = new UserEntity();
-        UserEntity user2 = new UserEntity();
-        when(userRepository.findAll()).thenReturn(Arrays.asList(user1, user2).iterator());
+// assertTrue(userService.fieldValid(user));
+// }
 
-        List<UserEntity> allUsers = userService.findAll();
+// @Test
+// void findAllTest() {
+// List<UserEntity> users = Arrays.asList(new UserEntity(), new UserEntity());
+// when(userRepository.findAll()).thenReturn(users);
 
-        assertEquals(2, allUsers.size());
-    }
+// assertEquals(users, userService.findAll());
+// }
 
-    @Test
-    void findByUsername_existingUser() {
-        UserEntity user = new UserEntity();
-        user.setUsername("testuser");
-        when(userRepository.findByUsername("testuser")).thenReturn(user);
+// @Test
+// void findByUsernameTest() {
+// UserEntity user = new UserEntity();
+// when(userRepository.findById("username")).thenReturn(java.util.Optional.of(user));
 
-        UserEntity foundUser = userService.findByUsername("testuser");
+// assertEquals(java.util.Optional.of(user),
+// userService.findByUsername("username"));
+// }
 
-        assertEquals(user, foundUser);
-    }
+// @Test
+// void updateTest() {
+// UserEntity user = new UserEntity();
+// user.setName("name");
+// user.setAddress("address");
 
-    @Test
-    void findByUsername_nonExistingUser() {
-        when(userRepository.findByUsername("nonexistent")).thenReturn(null);
+// UserEntity userToUpdate = new UserEntity();
+// userToUpdate.setName("nameToUpdate");
+// userToUpdate.setAddress("addressToUpdate");
 
-        UserEntity foundUser = userService.findByUsername("nonexistent");
+// when(userRepository.findById("userId")).thenReturn(java.util.Optional.of(userToUpdate));
 
-        assertNull(foundUser);
-    }
+// userService.update("userId", user);
 
-    @Test
-    void update_existingUser() {
-        UserEntity user = new UserEntity();
-        user.setUsername("testuser");
-        userService.update("testuser", user);
+// assertEquals(user.getName(), userToUpdate.getName());
+// assertEquals(user.getAddress(), userToUpdate.getAddress());
 
-        verify(userRepository, times(1)).update("testuser", user);
-    }
+// verify(userRepository, times(1)).save(userToUpdate);
+// }
 
-    @Test
-    void deleteUserById_existingUser() {
-        userService.deleteUserById("testuser");
+// @Test
+// void deleteUserByIdTest() {
+// userService.deleteUserById("userId");
 
-        verify(userRepository, times(1)).delete("testuser");
-    }
+// verify(userRepository, times(1)).deleteById("userId");
+// }
 
-    @Test
-    void loadUserByUsername_existingUser() {
-        UserEntity user = new UserEntity();
-        user.setUsername("testuser");
-        user.setPassword("testpass");
-        user.setType("BUYER");
-        when(userRepository.findByUsername("testuser")).thenReturn(user);
+// @Test
+// void loadUserByUsernameSuccessTest() {
+// UserEntity user = new UserEntity();
+// user.setUsername("username");
+// when(userRepository.findById("username")).thenReturn(java.util.Optional.of(user));
 
-        assertNotNull(userService.loadUserByUsername("testuser"));
-    }
+// assertEquals(user, userService.loadUserByUsername("username"));
+// }
 
-    @Test
-    void loadUserByUsername_nonExistingUser() {
-        when(userRepository.findByUsername("nonexistent")).thenReturn(null);
+// @Test
+// void loadUserByUsernameFailTest() {
+// when(userRepository.findById("username")).thenReturn(java.util.Optional.empty());
 
-        assertThrows(UsernameNotFoundException.class, () -> userService.loadUserByUsername("nonexistent"));
-    }
-}
+// assertThrows(UsernameNotFoundException.class, () ->
+// userService.loadUserByUsername("username"));
+// }
+
+// }

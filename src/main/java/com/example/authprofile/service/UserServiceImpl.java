@@ -13,8 +13,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,13 +24,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public UserEntity create(UserEntity user) {
-        if (userRepository.findByUsername(user.getUsername()) == null &&
-                fieldValid(user)) {
-            userRepository.createUser(user);
-            return user;
-        } else {
-            throw new IllegalArgumentException();
-        }
+        return userRepository.save(user);
     }
 
     public boolean fieldValid(UserEntity user) {
@@ -46,46 +40,41 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public List<UserEntity> findAll() {
-        Iterator<UserEntity> userIterator = userRepository.findAll();
-        List<UserEntity> allUser = new ArrayList<>();
-        userIterator.forEachRemaining(allUser::add);
-        return allUser;
+        return userRepository.findAll();
     }
 
     @Override
-    public UserEntity findByUsername(String username) {
-        return userRepository.findByUsername(username);
+    public Optional<UserEntity> findByUsername(String username) {
+        return userRepository.findById(username);
     }
 
     @Override
     public void update(String userId, UserEntity user) {
-        userRepository.update(userId, user);
+        Optional<UserEntity> userToUpdate = userRepository.findById(userId);
+        if (userToUpdate.isPresent()) {
+            userToUpdate.get().setName(user.getName());
+            userToUpdate.get().setAddress(user.getAddress());
+            userRepository.save(userToUpdate.get());
+        }
     }
 
     @Override
     public void deleteUserById(String userId) {
-        userRepository.delete(userId);
+        userRepository.deleteById(userId);
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        System.out.println("loadUserByUsername called");
-        UserEntity user = userRepository.findByUsername(username);
-        if (user == null) {
-            System.out.println("User not found");
-            throw new UsernameNotFoundException("User not found");
+        Optional<UserEntity> user = userRepository.findById(username);
+        if (user.isEmpty()) {
+            throw new UsernameNotFoundException("user not found");
         }
-        System.out.println("User found");
-        return new User(user.getUsername(), user.getPassword(), mapToAuth(user.getType()));
+        return new User(user.get().getUsername(), user.get().getPassword(), mapToAuth(user.get().getType()));
     }
 
     private Collection<GrantedAuthority> mapToAuth(String type) {
         ArrayList<String> roles = new ArrayList<>();
         roles.add(type);
         return roles.stream().map(role -> new SimpleGrantedAuthority(type)).collect(Collectors.toList());
-    }
-
-    public void setUserRepository(UserRepository userRepository2) {
-        this.userRepository = userRepository2;
     }
 }
