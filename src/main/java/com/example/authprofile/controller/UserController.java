@@ -23,12 +23,6 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/create")
-    public ResponseEntity<UserEntity> createUser(@RequestBody UserEntity user) throws URISyntaxException {
-        UserEntity createdUser = userService.create(user);
-        return ResponseEntity.created(new URI("/user/" + createdUser.getUsername())).body(createdUser);
-    }
-
     @GetMapping("/list")
     public ResponseEntity<List<UserEntity>> userList() {
         List<UserEntity> users = userService.findAll();

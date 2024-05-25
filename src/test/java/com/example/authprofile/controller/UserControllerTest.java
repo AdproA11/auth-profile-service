@@ -39,16 +39,16 @@ public class UserControllerTest {
         MockitoAnnotations.openMocks(this);
     }
 
-    @Test
-    void createUser() throws URISyntaxException {
-        UserEntity userEntity = new UserEntity();
-        when(userService.create(any(UserEntity.class))).thenReturn(userEntity);
+    // @Test
+    // void createUser() throws URISyntaxException {
+    // UserEntity userEntity = new UserEntity();
+    // when(userService.create(any(UserEntity.class))).thenReturn(userEntity);
 
-        ResponseEntity<UserEntity> response = userController.createUser(userEntity);
+    // ResponseEntity<UserEntity> response = userController.createUser(userEntity);
 
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        assertEquals(userEntity, response.getBody());
-    }
+    // assertEquals(HttpStatus.CREATED, response.getStatusCode());
+    // assertEquals(userEntity, response.getBody());
+    // }
 
     @Test
     void userList() {

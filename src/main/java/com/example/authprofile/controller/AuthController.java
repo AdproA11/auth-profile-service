@@ -50,7 +50,6 @@ public class AuthController {
         model.addAttribute("logindto", loginDto);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("login.html");
-        System.out.println("starting login");
         return modelAndView;
     }
 
@@ -66,20 +65,6 @@ public class AuthController {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
         return new ResponseEntity<>(new AuthResponseDto(token), HttpStatus.OK);
-    }
-
-    @PostMapping("/login-redirect")
-    public ModelAndView loginRedirect(@RequestBody LoginDto loginDto, Model model) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        loginDto.getUsername(),
-                        loginDto.getPassword()));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String token = jwtGenerator.generateToken(authentication);
-        if (token == null) {
-            return new ModelAndView("login.html");
-        }
-        return new ModelAndView("redirect:/profile");
     }
 
     @PostMapping("/logout")
