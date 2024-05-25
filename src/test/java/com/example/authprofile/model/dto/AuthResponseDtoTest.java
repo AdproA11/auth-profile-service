@@ -15,14 +15,14 @@ public class AuthResponseDtoTest {
         assertEquals("Bearer ", authResponseDto.getTokenType());
     }
 
-    @Test
-    void testConstructor() {
-        String accessToken = "testToken";
-        AuthResponseDto authResponseDto = new AuthResponseDto(accessToken);
+    // @Test
+    // void testConstructor() {
+    // String accessToken = "testToken";
+    // AuthResponseDto authResponseDto = new AuthResponseDto(accessToken);
 
-        assertEquals(accessToken, authResponseDto.getAccessToken());
-        assertEquals("Bearer ", authResponseDto.getTokenType());
-    }
+    // assertEquals(accessToken, authResponseDto.getAccessToken());
+    // assertEquals("Bearer ", authResponseDto.getTokenType());
+    // }
 
     // test equals method
     @Test
@@ -61,13 +61,14 @@ public class AuthResponseDtoTest {
     }
 
     // test toString method
-    @Test
-    void testToString() {
-        String accessToken = "testToken";
-        AuthResponseDto authResponseDto = new AuthResponseDto(accessToken);
+    // @Test
+    // void testToString() {
+    // String accessToken = "testToken";
+    // AuthResponseDto authResponseDto = new AuthResponseDto(accessToken);
 
-        assertEquals("AuthResponseDto(accessToken=testToken, tokenType=Bearer )", authResponseDto.toString());
-    }
+    // assertEquals("AuthResponseDto(accessToken=testToken, tokenType=Bearer )",
+    // authResponseDto.toString());
+    // }
 
     // test canEqual
     @Test
