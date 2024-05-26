@@ -74,15 +74,9 @@ tasks.test {
 }
 
 tasks.jacocoTestReport {
-   classDirectories.setFrom(files(classDirectories.files.map {
-       fileTree(it) { exclude("**/*Application**") }
-   }))
-   dependsOn(tasks.test) // tests are required to run before generating the report
-   reports {
-       xml.required = true
-       csv.required.set(false)
-       html.outputLocation.set(layout.buildDirectory.dir(jacocoOutputLocation))
-   }
+	reports {
+		xml.required = true
+		html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml")) // specify your directory here
+	}
+	dependsOn(tasks.test)
 }
-
-val jacocoOutputLocation = "jacocoHtml"
