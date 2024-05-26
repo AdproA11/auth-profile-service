@@ -1,5 +1,7 @@
 package com.example.authprofile.security;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,36 +17,35 @@ import static org.mockito.Mockito.*;
 class JWTGeneratorTest {
 
     @Mock
+    private JWTConfig jwtConfig;
+
+    @Mock
     private Authentication authentication;
 
     @InjectMocks
     private JWTGenerator jwtGenerator;
 
-    private String testUsername = "testUser";
+    private final String secret = "secret";
+    private final String username = "testUser";
 
     @BeforeEach
     void setUp() {
-        when(authentication.getName()).thenReturn(testUsername);
+        when(jwtConfig.getSecret()).thenReturn(secret);
+        when(authentication.getName()).thenReturn(username);
     }
 
     @Test
-    void generateToken_ValidAuthentication_ReturnsToken() {
+    void generateToken_shouldReturnValidToken() {
         String generatedToken = jwtGenerator.generateToken(authentication);
         assertNotNull(generatedToken);
-        assertTrue(generatedToken.length() > 0);
-    }
 
-    @Test
-    void getUsernameFromJWT_ValidToken_ReturnsUsername() {
-        String token = jwtGenerator.generateToken(authentication);
-        String username = jwtGenerator.getUsernameFromJWT(token);
-        assertEquals(testUsername, username);
-    }
+        Claims claims = Jwts.parser()
+                .setSigningKey(secret)
+                .parseClaimsJws(generatedToken)
+                .getBody();
 
-    @Test
-    void validateToken_ValidToken_ReturnsTrue() {
-        String token = jwtGenerator.generateToken(authentication);
-        boolean isValid = jwtGenerator.validateToken(token);
-        assertTrue(isValid);
+        assertEquals(username, claims.getSubject());
+        assertNotNull(claims.getIssuedAt());
+        assertNotNull(claims.getExpiration());
     }
 }

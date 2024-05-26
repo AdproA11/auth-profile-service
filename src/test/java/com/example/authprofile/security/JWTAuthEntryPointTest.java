@@ -14,7 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
-public class JWTAuthEntryPointTest {
+class JWTAuthEntryPointTest {
 
     private HttpServletRequest request;
     private HttpServletResponse response;
@@ -23,7 +23,7 @@ public class JWTAuthEntryPointTest {
     private JWTAuthEntryPoint entryPoint;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         request = mock(HttpServletRequest.class);
         response = mock(HttpServletResponse.class);
         authException = mock(AuthenticationException.class);
@@ -32,7 +32,7 @@ public class JWTAuthEntryPointTest {
     }
 
     @Test
-    public void testNotFoundHandling() {
+    void testNotFoundHandling() {
         when(response.getStatus()).thenReturn(HttpStatus.NOT_FOUND.value());
         Counter counter = mock(Counter.class);
         when(meterRegistry.counter("app.errors", "type", "404")).thenReturn(counter);
@@ -42,7 +42,7 @@ public class JWTAuthEntryPointTest {
     }
 
     @Test
-    public void testForbiddenHandling() {
+    void testForbiddenHandling() {
         when(response.getStatus()).thenReturn(HttpStatus.FORBIDDEN.value());
         Counter counter = mock(Counter.class);
         when(meterRegistry.counter("app.errors", "type", "403")).thenReturn(counter);
@@ -52,7 +52,7 @@ public class JWTAuthEntryPointTest {
     }
 
     @Test
-    public void testOtherErrorsHandling() {
+    void testOtherErrorsHandling() {
         when(response.getStatus()).thenReturn(HttpStatus.INTERNAL_SERVER_ERROR.value());
         Counter counter = mock(Counter.class);
         when(meterRegistry.counter("app.errors", "type", "500")).thenReturn(counter);

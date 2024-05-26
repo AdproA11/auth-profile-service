@@ -3,6 +3,7 @@ package com.example.authprofile.security;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -11,7 +12,9 @@ import java.util.Date;
 
 @Component
 public class JWTGenerator {
-    private static final String SECRET = "secret";
+
+    // jwt config object
+    private JWTConfig jwtConfig;
 
     public String generateToken(Authentication authentication) {
         String username = authentication.getName();
@@ -21,13 +24,13 @@ public class JWTGenerator {
                 .setSubject(username)
                 .setIssuedAt(new Date())
                 .setExpiration(expireDate)
-                .signWith(SignatureAlgorithm.HS512, SECRET)
+                .signWith(SignatureAlgorithm.HS512, jwtConfig.getSecret())
                 .compact();
     }
 
     public String getUsernameFromJWT(String token) {
         Claims claims = Jwts.parser()
-                .setSigningKey(SECRET)
+                .setSigningKey(jwtConfig.getSecret())
                 .parseClaimsJws(token)
                 .getBody();
         return claims.getSubject();
@@ -36,7 +39,7 @@ public class JWTGenerator {
     public boolean validateToken(String token) {
         try {
             Jwts.parser()
-                    .setSigningKey(SECRET)
+                    .setSigningKey(jwtConfig.getSecret())
                     .parseClaimsJws(token);
             System.out.println("validate token " + token);
             return true;

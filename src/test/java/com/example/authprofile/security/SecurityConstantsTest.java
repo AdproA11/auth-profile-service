@@ -3,10 +3,10 @@ package com.example.authprofile.security;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class SecurityConstantsTest {
+class SecurityConstantsTest {
 
     @Test
-    public void testJWTExpirationConstant() {
+    void testJWTExpirationConstant() {
         assertEquals(3600000, SecurityConstants.JWT_EXPIRATION);
     }
 }

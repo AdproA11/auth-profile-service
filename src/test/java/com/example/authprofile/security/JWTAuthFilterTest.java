@@ -15,10 +15,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 import java.lang.reflect.InvocationTargetException;
 
-public class JWTAuthFilterTest {
+class JWTAuthFilterTest {
 
     @Test
-    public void testDoFilterInternal_NoToken() throws ServletException, IOException {
+    void testDoFilterInternal_NoToken() throws ServletException, IOException {
         HttpServletRequest request = mock(HttpServletRequest.class);
         HttpServletResponse response = mock(HttpServletResponse.class);
         FilterChain filterChain = mock(FilterChain.class);
@@ -30,7 +30,7 @@ public class JWTAuthFilterTest {
     }
 
     @Test
-    public void testDoFilterInternal_WithToken() throws ServletException, IOException {
+    void testDoFilterInternal_WithToken() throws ServletException, IOException {
         HttpServletRequest request = mock(HttpServletRequest.class);
         HttpServletResponse response = mock(HttpServletResponse.class);
         FilterChain filterChain = mock(FilterChain.class);
@@ -56,7 +56,7 @@ public class JWTAuthFilterTest {
     }
 
     @Test
-    public void testGetJWTFromRequest()
+    void testGetJWTFromRequest()
             throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         HttpServletRequest request = mock(HttpServletRequest.class);
         when(request.getHeader("Authorization")).thenReturn("Bearer mockToken");
