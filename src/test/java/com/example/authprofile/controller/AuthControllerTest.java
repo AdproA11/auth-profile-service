@@ -22,7 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-public class AuthControllerTest {
+class AuthControllerTest {
 
     @Mock
     private AuthenticationManager authenticationManager;
@@ -49,12 +49,12 @@ public class AuthControllerTest {
 
     @BeforeEach
     public void setup() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(authController).build();
     }
 
     @Test
-    public void testLogin() throws Exception {
+    void testLogin() throws Exception {
         LoginDto loginDto = new LoginDto();
         loginDto.setUsername("test");
         loginDto.setPassword("password");

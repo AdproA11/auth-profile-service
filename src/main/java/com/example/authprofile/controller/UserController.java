@@ -3,7 +3,6 @@ package com.example.authprofile.controller;
 import com.example.authprofile.model.UserEntity;
 import com.example.authprofile.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.util.Optionals;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -11,8 +10,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,7 +38,7 @@ public class UserController {
     }
 
     @PutMapping("/edit/{userId}")
-    public ResponseEntity<?> updateUser(@PathVariable("userId") String userId, @RequestBody UserEntity user) {
+    public ResponseEntity<Void> updateUser(@PathVariable("userId") String userId, @RequestBody UserEntity user) {
         userService.update(userId, user);
         return new ResponseEntity<>(HttpStatus.OK);
     }

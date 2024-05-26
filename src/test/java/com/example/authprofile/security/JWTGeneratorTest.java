@@ -21,7 +21,6 @@ class JWTGeneratorTest {
     private JWTGenerator jwtGenerator;
 
     private String testUsername = "testUser";
-    private String testToken = "testToken";
 
     @BeforeEach
     void setUp() {

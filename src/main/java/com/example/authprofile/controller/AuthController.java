@@ -5,7 +5,6 @@ import com.example.authprofile.model.UserEntity;
 import com.example.authprofile.model.dto.AuthResponseDto;
 import com.example.authprofile.model.dto.LoginDto;
 import com.example.authprofile.model.dto.RegisterDto;
-import com.example.authprofile.repository.UserRepository;
 import com.example.authprofile.security.JWTGenerator;
 import com.example.authprofile.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,11 +90,11 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody RegisterDto registerDto) {
-        System.out.println("RegisterDto received in controller:");
-        System.out.println("username = " + registerDto.getUsername());
-        System.out.println("password = " + registerDto.getPassword());
-        System.out.println("type = " + registerDto.getType());
-        System.out.println("name = " + registerDto.getName());
+        // System.out.println("RegisterDto received in controller:");
+        // System.out.println("username = " + registerDto.getUsername());
+        // System.out.println("password = " + registerDto.getPassword());
+        // System.out.println("type = " + registerDto.getType());
+        // System.out.println("name = " + registerDto.getName());
 
         if (userService.findByUsername(registerDto.getUsername()).isPresent()) {
             return new ResponseEntity<>("Username is taken!", HttpStatus.BAD_REQUEST);
