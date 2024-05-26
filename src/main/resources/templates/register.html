@@ -42,12 +42,56 @@
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
+
+
     </div>
 
 
+    <!-- boostrap stuffs -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
         crossorigin="anonymous"></script>
+
+
+    <!-- javasript ajax post -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('form').submit(function (event) {
+                event.preventDefault();
+                var username = $('#usernameInput').val();
+                var password = $('#passwordInput').val();
+                var type = $('#roleInput').val();
+
+                // Check if the fields are not empty
+                if (!username || !password || !type) {
+                    alert('All fields are required');
+                    return;
+                }
+
+                var data = {
+                    "username": username,
+                    "password": password,
+                    "type": type
+                };
+                $.ajax({
+                    type: "POST",
+                    contentType: "application/json",
+                    url: "/api/auth/register",
+                    data: JSON.stringify(data),
+                    dataType: 'json',
+                    success: function (data) {
+                        window.location.href = "/api/auth/login";
+                    },
+                    error: function (e) {
+                        console.log("AJAX error: ", e.responseText);
+                        window.location.href = "/api/auth/login";
+                    }
+                });
+            });
+        });
+    </script>
+
 </body>
 
 </html>
