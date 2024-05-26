@@ -16,6 +16,7 @@ sonarqube {
         property("sonar.tests", "src/test")
         property("sonar.java.coveragePlugin", "jacoco")
         property("sonar.jacoco.reportPaths", "build/jacoco/test.exec")
+		property("sonar.host.url", "https://sonarcloud.io")
     }
 }
 
