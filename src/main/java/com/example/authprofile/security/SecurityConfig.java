@@ -26,6 +26,7 @@ public class SecurityConfig {
         this.authEntryPoint = authEntryPoint;
     }
 
+    @SuppressWarnings({ "removal", "deprecation" })
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
