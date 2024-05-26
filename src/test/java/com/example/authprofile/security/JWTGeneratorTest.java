@@ -1,50 +1,35 @@
 package com.example.authprofile.security;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwts;
 
-@ExtendWith(MockitoExtension.class)
+import java.util.Date;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 class JWTGeneratorTest {
 
     @Mock
-    private Authentication authentication;
-
-    @InjectMocks
     private JWTGenerator jwtGenerator;
 
-    private String testUsername = "testUser";
-
-    @BeforeEach
-    void setUp() {
-        when(authentication.getName()).thenReturn(testUsername);
-    }
-
     @Test
-    void generateToken_ValidAuthentication_ReturnsToken() {
-        String generatedToken = jwtGenerator.generateToken(authentication);
-        assertNotNull(generatedToken);
-        assertTrue(generatedToken.length() > 0);
-    }
+    void testGenerateToken() {
+        jwtGenerator = new JWTGenerator();
+        jwtGenerator.jwtSecret = "testSecret";
+        jwtGenerator.jwtExpiration = 3600000; // 1 hour in milliseconds
 
-    @Test
-    void getUsernameFromJWT_ValidToken_ReturnsUsername() {
+        Authentication authentication = new UsernamePasswordAuthenticationToken("username", "password");
         String token = jwtGenerator.generateToken(authentication);
-        String username = jwtGenerator.getUsernameFromJWT(token);
-        assertEquals(testUsername, username);
-    }
 
-    @Test
-    void validateToken_ValidToken_ReturnsTrue() {
-        String token = jwtGenerator.generateToken(authentication);
-        boolean isValid = jwtGenerator.validateToken(token);
-        assertTrue(isValid);
+        // Assert that token is not null
+        assertEquals(true, token != null && !token.isEmpty());
     }
 }

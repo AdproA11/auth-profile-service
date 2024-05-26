@@ -14,10 +14,10 @@ import java.util.Date;
 public class JWTGenerator {
 
     @Value("${jwt.secret}")
-    private String jwtSecret;
+    String jwtSecret;
 
     @Value("${jwt.expiration}")
-    private int jwtExpiration;
+    int jwtExpiration;
 
     public String generateToken(Authentication authentication) {
         String username = authentication.getName();
