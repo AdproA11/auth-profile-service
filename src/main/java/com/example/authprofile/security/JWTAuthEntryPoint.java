@@ -18,6 +18,7 @@ import java.io.IOException;
 public class JWTAuthEntryPoint implements AuthenticationEntryPoint {
 
     private final MeterRegistry meterRegistry;
+    private static final String APP_ERRORS = "app.errors";
 
     public JWTAuthEntryPoint(MeterRegistry meterRegistry) {
         this.meterRegistry = meterRegistry;
@@ -27,23 +28,23 @@ public class JWTAuthEntryPoint implements AuthenticationEntryPoint {
     public void commence(HttpServletRequest request, HttpServletResponse response,
             AuthenticationException authException) throws IOException, ServletException {
         if (HttpStatus.NOT_FOUND.value() == response.getStatus()) {
-            meterRegistry.counter("app.errors", "type", "404").increment();
+            meterRegistry.counter(APP_ERRORS, "type", "404").increment();
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     authException.getMessage());
         } else if (HttpStatus.FORBIDDEN.value() == response.getStatus()) {
-            meterRegistry.counter("app.errors", "type", "403").increment();
+            meterRegistry.counter(APP_ERRORS, "type", "403").increment();
             throw new ResponseStatusException(HttpStatus.FORBIDDEN,
                     authException.getMessage());
         } else if (HttpStatus.UNAUTHORIZED.value() == response.getStatus()) {
-            meterRegistry.counter("app.errors", "type", "401").increment();
+            meterRegistry.counter(APP_ERRORS, "type", "401").increment();
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
                     authException.getMessage());
         } else if (HttpStatus.BAD_REQUEST.value() == response.getStatus()) {
-            meterRegistry.counter("app.errors", "type", "400").increment();
+            meterRegistry.counter(APP_ERRORS, "type", "400").increment();
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     authException.getMessage());
         } else {
-            meterRegistry.counter("app.errors", "type", "500").increment();
+            meterRegistry.counter(APP_ERRORS, "type", "500").increment();
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     authException.getMessage());
         }
