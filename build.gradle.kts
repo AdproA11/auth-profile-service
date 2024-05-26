@@ -50,6 +50,7 @@ dependencies {
 	runtimeOnly("org.postgresql:postgresql")
 	testImplementation("com.h2database:h2")
 	implementation("com.h2database:h2")
+	implementation("org.jacoco:org.jacoco.core:0.8.7")
 }
 
 
