@@ -7,24 +7,24 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class UserBuilderTest {
+class UserBuilderTest {
 
     private UserBuilder userBuilder;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         userBuilder = new UserBuilder();
     }
 
     @Test
-    public void testReset() {
+    void testReset() {
         userBuilder.addName("John");
         userBuilder.reset();
         assertNull(userBuilder.getCurrent().getName());
     }
 
     @Test
-    public void testAddName() {
+    void testAddName() {
         userBuilder.addName("John");
         assertEquals("John", userBuilder.getCurrent().getName());
     }
@@ -32,18 +32,18 @@ public class UserBuilderTest {
     // Similar tests for other add methods...
 
     @Test
-    public void testAddType_ValidType() {
+    void testAddType_ValidType() {
         userBuilder.addType(UserType.ADMIN.name());
         assertEquals(UserType.ADMIN.name(), userBuilder.getCurrent().getType());
     }
 
     @Test
-    public void testAddType_InvalidType() {
+    void testAddType_InvalidType() {
         assertThrows(IllegalArgumentException.class, () -> userBuilder.addType("InvalidType"));
     }
 
     @Test
-    public void testSetCurrent() {
+    void testSetCurrent() {
         UserEntity user = new UserEntity();
         user.setUsername("testUser");
         userBuilder.setCurrent(user);
@@ -51,7 +51,7 @@ public class UserBuilderTest {
     }
 
     @Test
-    public void testBuild() {
+    void testBuild() {
         UserEntity user = userBuilder.addName("John")
                 .addUsername("john123")
                 .addPassword("password")
@@ -63,25 +63,25 @@ public class UserBuilderTest {
     }
 
     @Test
-    public void testIsBuyer_True() {
+    void testIsBuyer_True() {
         userBuilder.addType(UserType.BUYER.name());
         assertTrue(userBuilder.isBuyer());
     }
 
     @Test
-    public void testIsBuyer_False() {
+    void testIsBuyer_False() {
         userBuilder.addType(UserType.ADMIN.name());
         assertFalse(userBuilder.isBuyer());
     }
 
     @Test
-    public void testIsAdmin_True() {
+    void testIsAdmin_True() {
         userBuilder.addType(UserType.ADMIN.name());
         assertTrue(userBuilder.isAdmin());
     }
 
     @Test
-    public void testIsAdmin_False() {
+    void testIsAdmin_False() {
         userBuilder.addType(UserType.BUYER.name());
         assertFalse(userBuilder.isAdmin());
     }

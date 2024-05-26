@@ -37,9 +37,11 @@ public class AuthController {
     private AuthenticationManager authenticationManager;
     private UserService userService;
     private PasswordEncoder passwordEncoder;
-
-    @Autowired
     private UserBuilder userEntityBuilder;
+
+    public AuthController(UserBuilder userEntityBuilder) {
+        this.userEntityBuilder = userEntityBuilder;
+    }
 
     private JWTGenerator jwtGenerator;
 
