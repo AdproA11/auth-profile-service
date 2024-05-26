@@ -52,10 +52,4 @@ public class JWTGenerator {
                     ex.fillInStackTrace());
         }
     }
-
-    public static void main(String[] args) {
-        // print jwt config secret
-        JWTConfig jwtConfig = new JWTConfig();
-        System.out.println(jwtConfig.getSecret());
-    }
 }

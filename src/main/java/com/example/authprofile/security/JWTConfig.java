@@ -16,9 +16,4 @@ public class JWTConfig {
     public String getSecret() {
         return secret;
     }
-
-    public static void main(String[] args) {
-        JWTConfig jwtConfig = new JWTConfig();
-        System.out.println(jwtConfig.getSecret());
-    }
 }
