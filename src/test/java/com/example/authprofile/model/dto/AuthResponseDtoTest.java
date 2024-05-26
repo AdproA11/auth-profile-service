@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-public class AuthResponseDtoTest {
+class AuthResponseDtoTest {
 
     @Test
     void testTokenType() {
@@ -47,7 +47,7 @@ public class AuthResponseDtoTest {
         String accessToken = "testToken";
         AuthResponseDto authResponseDto = new AuthResponseDto(accessToken);
 
-        assertTrue(authResponseDto.equals(authResponseDto));
+        assertEquals(authResponseDto, authResponseDto);
     }
 
     // test hashCode method

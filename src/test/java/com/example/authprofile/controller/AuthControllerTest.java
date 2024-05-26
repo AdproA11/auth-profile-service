@@ -1,26 +1,26 @@
 package com.example.authprofile.controller;
 
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import com.example.authprofile.model.Builder.UserBuilder;
+import com.example.authprofile.model.UserEntity;
+import com.example.authprofile.model.dto.AuthResponseDto;
 import com.example.authprofile.model.dto.LoginDto;
-import com.example.authprofile.repository.UserRepository;
+import com.example.authprofile.model.dto.RegisterDto;
 import com.example.authprofile.security.JWTGenerator;
 import com.example.authprofile.service.UserService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.MediaType;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.ui.Model;
+import org.springframework.web.servlet.ModelAndView;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 class AuthControllerTest {
 
@@ -28,49 +28,86 @@ class AuthControllerTest {
     private AuthenticationManager authenticationManager;
 
     @Mock
-    private UserRepository userRepository;
+    private UserService userService;
 
     @Mock
     private PasswordEncoder passwordEncoder;
 
     @Mock
-    private UserBuilder userEntityBuilder;
-
-    @Mock
     private JWTGenerator jwtGenerator;
-
-    @Mock
-    private UserService userService;
 
     @InjectMocks
     private AuthController authController;
 
-    private MockMvc mockMvc;
-
-    @BeforeEach
-    public void setup() {
-        MockitoAnnotations.openMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(authController).build();
+    public AuthControllerTest() {
+        MockitoAnnotations.initMocks(this);
     }
 
     @Test
-    void testLogin() throws Exception {
+    void login_get() {
+        Model model = mock(Model.class);
+
+        ModelAndView modelAndView = authController.login(model);
+
+        assertNotNull(modelAndView);
+        assertEquals("login.html", modelAndView.getViewName());
+    }
+
+    @Test
+    void login_post_unauthorized() {
+        Model model = mock(Model.class);
         LoginDto loginDto = new LoginDto();
         loginDto.setUsername("test");
         loginDto.setPassword("password");
 
-        Authentication auth = new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword());
-        when(authenticationManager.authenticate(any())).thenReturn(auth);
+        when(authenticationManager.authenticate(any())).thenReturn(null);
 
-        String token = "token";
-        when(jwtGenerator.generateToken(auth)).thenReturn(token);
+        ResponseEntity<AuthResponseDto> responseEntity = authController.login(loginDto, model);
 
-        mockMvc.perform(post("/api/auth/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"username\":\"test\",\"password\":\"password\"}"))
-                .andExpect(status().isOk());
+        assertNotNull(responseEntity);
+        assertEquals(HttpStatus.UNAUTHORIZED, responseEntity.getStatusCode());
+    }
 
-        verify(authenticationManager, times(1)).authenticate(any());
-        verify(jwtGenerator, times(1)).generateToken(any());
+    @Test
+    void postlogin() {
+        Model model = mock(Model.class);
+
+        ModelAndView modelAndView = authController.postlogin(model);
+
+        assertNotNull(modelAndView);
+        assertEquals("postlogin.html", modelAndView.getViewName());
+    }
+
+    @Test
+    void logout() {
+        ResponseEntity<String> responseEntity = authController.logout();
+
+        assertNotNull(responseEntity);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals("Logout success!", responseEntity.getBody());
+    }
+
+    @Test
+    void register_get() {
+        Model model = mock(Model.class);
+
+        ModelAndView modelAndView = authController.register(model);
+
+        assertNotNull(modelAndView);
+        assertEquals("register.html", modelAndView.getViewName());
+    }
+
+    @Test
+    void register_post_username_taken() {
+        RegisterDto registerDto = new RegisterDto();
+        registerDto.setUsername("existingUser");
+
+        when(userService.findByUsername("existingUser")).thenReturn(java.util.Optional.of(new UserEntity()));
+
+        ResponseEntity<String> responseEntity = authController.register(registerDto);
+
+        assertNotNull(responseEntity);
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+        assertEquals("Username is taken!", responseEntity.getBody());
     }
 }

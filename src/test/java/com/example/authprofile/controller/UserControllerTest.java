@@ -2,18 +2,23 @@ package com.example.authprofile.controller;
 
 import com.example.authprofile.model.UserEntity;
 import com.example.authprofile.service.UserService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class UserControllerTest {
@@ -24,85 +29,137 @@ class UserControllerTest {
     @InjectMocks
     private UserController userController;
 
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
+    public UserControllerTest() {
+        MockitoAnnotations.initMocks(this);
     }
-
-    // @Test
-    // void createUser() throws URISyntaxException {
-    // UserEntity userEntity = new UserEntity();
-    // when(userService.create(any(UserEntity.class))).thenReturn(userEntity);
-
-    // ResponseEntity<UserEntity> response = userController.createUser(userEntity);
-
-    // assertEquals(HttpStatus.CREATED, response.getStatusCode());
-    // assertEquals(userEntity, response.getBody());
-    // }
 
     @Test
     void userList() {
         List<UserEntity> userList = new ArrayList<>();
         when(userService.findAll()).thenReturn(userList);
 
-        ResponseEntity<List<UserEntity>> response = userController.userList();
+        ResponseEntity<List<UserEntity>> responseEntity = userController.userList();
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(userList, response.getBody());
+        assertNotNull(responseEntity);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(userList, responseEntity.getBody());
     }
 
     @Test
-    void editUser_UserFound() {
+    void getUsername_userFound() {
+        Authentication authentication = mock(Authentication.class);
+        SecurityContext securityContext = mock(SecurityContext.class);
+        SecurityContextHolder.setContext(securityContext);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+
+        UserDetails userDetails = new User("test", "password", new ArrayList<>());
+        when(authentication.getPrincipal()).thenReturn(userDetails);
+
         UserEntity userEntity = new UserEntity();
-        when(userService.findByUsername(anyString())).thenReturn(Optional.of(userEntity));
+        userEntity.setUsername("test");
+        when(userService.findByUsername("test")).thenReturn(Optional.of(userEntity));
 
-        ResponseEntity<UserEntity> response = userController.editUser("username");
+        ResponseEntity<String> responseEntity = userController.getUsername();
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(userEntity, response.getBody());
+        assertNotNull(responseEntity);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals("test", responseEntity.getBody());
     }
-
-    // @Test
-    // void editUser_UserNotFound() {
-    // when(userService.findByUsername(anyString())).thenReturn(null);
-
-    // ResponseEntity<UserEntity> response = userController.editUser("username");
-
-    // assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-    // }
 
     @Test
-    void updateUser() {
-        UserEntity userEntity = new UserEntity();
-        doNothing().when(userService).update(anyString(), any(UserEntity.class));
+    void getUsername_userNotFound() {
+        Authentication authentication = mock(Authentication.class);
+        SecurityContext securityContext = mock(SecurityContext.class);
+        SecurityContextHolder.setContext(securityContext);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
 
-        ResponseEntity<?> response = userController.updateUser("username", userEntity);
+        UserDetails userDetails = new User("test", "password", new ArrayList<>());
+        when(authentication.getPrincipal()).thenReturn(userDetails);
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        verify(userService).update("username", userEntity);
+        when(userService.findByUsername("test")).thenReturn(Optional.empty());
+
+        ResponseEntity<String> responseEntity = userController.getUsername();
+
+        assertNotNull(responseEntity);
+        assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
     }
 
-    // @Test
-    // void getUsername() {
-    // UserEntity userEntity = new UserEntity();
-    // when(userService.findByUsername(anyString())).thenReturn(Optional.of(userEntity));
+    @Test
+    void getUsernameAndRole_userFound() {
+        Authentication authentication = mock(Authentication.class);
+        SecurityContext securityContext = mock(SecurityContext.class);
+        SecurityContextHolder.setContext(securityContext);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
 
-    // ResponseEntity<String> response = userController.getUsername();
+        UserDetails userDetails = new User("test", "password", new ArrayList<>());
+        when(authentication.getPrincipal()).thenReturn(userDetails);
 
-    // assertEquals(HttpStatus.OK, response.getStatusCode());
-    // assertEquals(userEntity.getUsername(), response.getBody());
-    // }
+        UserEntity userEntity = new UserEntity();
+        userEntity.setUsername("test");
+        userEntity.setType("ROLE_USER");
+        when(userService.findByUsername("test")).thenReturn(Optional.of(userEntity));
 
-    // @SuppressWarnings("null")
-    // @Test
-    // void getUsernameAndRole() {
-    // UserEntity userEntity = new UserEntity();
-    // userEntity.setType("ROLE_USER");
-    // when(userService.findByUsername(anyString())).thenReturn(Optional.of(userEntity));
+        ResponseEntity<String> responseEntity = userController.getUsernameAndRole();
 
-    // ResponseEntity<String> response = userController.getUsernameAndRole();
+        assertNotNull(responseEntity);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals("ROLE_USER", responseEntity.getBody());
+    }
 
-    // assertEquals(HttpStatus.OK, response.getStatusCode());
-    // assertEquals(userEntity.getType(), response.getBody());
-    // }
+    @Test
+    void getUsernameAndRole_userNotFound() {
+        Authentication authentication = mock(Authentication.class);
+        SecurityContext securityContext = mock(SecurityContext.class);
+        SecurityContextHolder.setContext(securityContext);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+
+        UserDetails userDetails = new User("test", "password", new ArrayList<>());
+        when(authentication.getPrincipal()).thenReturn(userDetails);
+
+        when(userService.findByUsername("test")).thenReturn(Optional.empty());
+
+        ResponseEntity<String> responseEntity = userController.getUsernameAndRole();
+
+        assertNotNull(responseEntity);
+        assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
+    }
+
+    @Test
+    void getCurrentUser_userFound() {
+        Authentication authentication = mock(Authentication.class);
+        SecurityContext securityContext = mock(SecurityContext.class);
+        SecurityContextHolder.setContext(securityContext);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+
+        UserDetails userDetails = new User("test", "password", new ArrayList<>());
+        when(authentication.getPrincipal()).thenReturn(userDetails);
+
+        UserEntity userEntity = new UserEntity();
+        userEntity.setUsername("test");
+        when(userService.findByUsername("test")).thenReturn(Optional.of(userEntity));
+
+        ResponseEntity<UserEntity> responseEntity = userController.getCurrentUser();
+
+        assertNotNull(responseEntity);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(userEntity, responseEntity.getBody());
+    }
+
+    @Test
+    void getCurrentUser_userNotFound() {
+        Authentication authentication = mock(Authentication.class);
+        SecurityContext securityContext = mock(SecurityContext.class);
+        SecurityContextHolder.setContext(securityContext);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+
+        UserDetails userDetails = new User("test", "password", new ArrayList<>());
+        when(authentication.getPrincipal()).thenReturn(userDetails);
+
+        when(userService.findByUsername("test")).thenReturn(Optional.empty());
+
+        ResponseEntity<UserEntity> responseEntity = userController.getCurrentUser();
+
+        assertNotNull(responseEntity);
+        assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
+    }
 }

@@ -1,106 +1,126 @@
-// package com.example.authprofile.service;
+package com.example.authprofile.service;
 
-// import com.example.authprofile.model.UserEntity;
-// import com.example.authprofile.repository.UserRepository;
-// import org.junit.jupiter.api.BeforeEach;
-// import org.junit.jupiter.api.Test;
-// import org.mockito.Mockito;
-// import
-// org.springframework.security.core.userdetails.UsernameNotFoundException;
+import com.example.authprofile.model.UserEntity;
+import com.example.authprofile.repository.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-// import java.util.Arrays;
-// import java.util.List;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
-// import static org.junit.jupiter.api.Assertions.*;
-// import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
-// class UserServiceImplTest {
+class UserServiceImplTest {
 
-// private UserServiceImpl userService;
-// private UserRepository userRepository;
+    @Mock
+    private UserRepository userRepository;
 
-// @BeforeEach
-// void setUp() {
-// userRepository = Mockito.mock(UserRepository.class);
-// userService = Mockito.mock(UserServiceImpl.class);
-// }
+    @InjectMocks
+    private UserServiceImpl userService;
 
-// @Test
-// void createUserTest() {
-// UserEntity user = new UserEntity();
-// userService.create(user);
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.initMocks(this);
+    }
 
-// verify(userRepository, times(1)).save(user);
-// }
+    @Test
+    void create() {
+        UserEntity user = new UserEntity();
+        when(userRepository.save(user)).thenReturn(user);
 
-// @Test
-// void fieldValidTest() {
-// UserEntity user = new UserEntity();
-// user.setAddress("address");
-// user.setPhoneNumber("1234567890");
+        UserEntity createdUser = userService.create(user);
 
-// assertTrue(userService.fieldValid(user));
-// }
+        assertNotNull(createdUser);
+        verify(userRepository).save(user);
+    }
 
-// @Test
-// void findAllTest() {
-// List<UserEntity> users = Arrays.asList(new UserEntity(), new UserEntity());
-// when(userRepository.findAll()).thenReturn(users);
+    @Test
+    void fieldValid() {
+        UserEntity user = new UserEntity();
+        user.setPhoneNumber("1234567890");
+        user.setAddress("Test Address");
 
-// assertEquals(users, userService.findAll());
-// }
+        assertTrue(userService.fieldValid(user));
+    }
 
-// @Test
-// void findByUsernameTest() {
-// UserEntity user = new UserEntity();
-// when(userRepository.findById("username")).thenReturn(java.util.Optional.of(user));
+    @Test
+    void findAll() {
+        List<UserEntity> users = new ArrayList<>();
+        when(userRepository.findAll()).thenReturn(users);
 
-// assertEquals(java.util.Optional.of(user),
-// userService.findByUsername("username"));
-// }
+        List<UserEntity> foundUsers = userService.findAll();
 
-// @Test
-// void updateTest() {
-// UserEntity user = new UserEntity();
-// user.setName("name");
-// user.setAddress("address");
+        assertEquals(users, foundUsers);
+        verify(userRepository).findAll();
+    }
 
-// UserEntity userToUpdate = new UserEntity();
-// userToUpdate.setName("nameToUpdate");
-// userToUpdate.setAddress("addressToUpdate");
+    @Test
+    void findByUsername() {
+        UserEntity user = new UserEntity();
+        user.setUsername("testUser");
+        when(userRepository.findById("testUser")).thenReturn(Optional.of(user));
 
-// when(userRepository.findById("userId")).thenReturn(java.util.Optional.of(userToUpdate));
+        Optional<UserEntity> foundUser = userService.findByUsername("testUser");
 
-// userService.update("userId", user);
+        assertTrue(foundUser.isPresent());
+        assertEquals(user, foundUser.get());
+        verify(userRepository).findById("testUser");
+    }
 
-// assertEquals(user.getName(), userToUpdate.getName());
-// assertEquals(user.getAddress(), userToUpdate.getAddress());
+    @Test
+    void update() {
+        UserEntity existingUser = new UserEntity();
+        existingUser.setName("Old Name");
+        existingUser.setAddress("Old Address");
+        Optional<UserEntity> optionalUser = Optional.of(existingUser);
 
-// verify(userRepository, times(1)).save(userToUpdate);
-// }
+        UserEntity updatedUser = new UserEntity();
+        updatedUser.setName("New Name");
+        updatedUser.setAddress("New Address");
 
-// @Test
-// void deleteUserByIdTest() {
-// userService.deleteUserById("userId");
+        when(userRepository.findById("userId")).thenReturn(optionalUser);
 
-// verify(userRepository, times(1)).deleteById("userId");
-// }
+        userService.update("userId", updatedUser);
 
-// @Test
-// void loadUserByUsernameSuccessTest() {
-// UserEntity user = new UserEntity();
-// user.setUsername("username");
-// when(userRepository.findById("username")).thenReturn(java.util.Optional.of(user));
+        assertEquals("New Name", existingUser.getName());
+        assertEquals("New Address", existingUser.getAddress());
+        verify(userRepository).save(existingUser);
+    }
 
-// assertEquals(user, userService.loadUserByUsername("username"));
-// }
+    @Test
+    void deleteUserById() {
+        userService.deleteUserById("userId");
 
-// @Test
-// void loadUserByUsernameFailTest() {
-// when(userRepository.findById("username")).thenReturn(java.util.Optional.empty());
+        verify(userRepository).deleteById("userId");
+    }
 
-// assertThrows(UsernameNotFoundException.class, () ->
-// userService.loadUserByUsername("username"));
-// }
+    @Test
+    void loadUserByUsername_userNotFound() {
+        when(userRepository.findById("username")).thenReturn(Optional.empty());
 
-// }
+        assertThrows(UsernameNotFoundException.class, () -> userService.loadUserByUsername("username"));
+    }
+
+    @Test
+    void loadUserByUsername_userFound() {
+        UserEntity user = new UserEntity();
+        user.setUsername("username");
+        user.setPassword("password");
+        user.setType("ROLE_USER");
+        when(userRepository.findById("username")).thenReturn(Optional.of(user));
+
+        UserDetails userDetails = userService.loadUserByUsername("username");
+
+        assertNotNull(userDetails);
+        assertEquals("username", userDetails.getUsername());
+        assertEquals("password", userDetails.getPassword());
+        assertEquals("ROLE_USER", userDetails.getAuthorities().iterator().next().getAuthority());
+    }
+}

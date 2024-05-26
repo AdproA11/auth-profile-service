@@ -72,6 +72,7 @@ tasks.test {
    useJUnitPlatform()
    finalizedBy(tasks.jacocoTestReport) // report is always generated after tests run
 }
+
 tasks.jacocoTestReport {
    classDirectories.setFrom(files(classDirectories.files.map {
        fileTree(it) { exclude("**/*Application**") }
@@ -80,6 +81,8 @@ tasks.jacocoTestReport {
    reports {
        xml.required = true
        csv.required.set(false)
-       html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml"))
+       html.outputLocation.set(layout.buildDirectory.dir(jacocoOutputLocation))
    }
 }
+
+val jacocoOutputLocation = "jacocoHtml"

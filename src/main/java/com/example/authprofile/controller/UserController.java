@@ -26,23 +26,6 @@ public class UserController {
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
-    @GetMapping("/edit/{userId}")
-    public ResponseEntity<UserEntity> editUser(@PathVariable("userId") String username) {
-        UserEntity user = userService.findByUsername(username).orElse(null);
-
-        if (user == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        return new ResponseEntity<>(user, HttpStatus.OK);
-    }
-
-    @PutMapping("/edit/{userId}")
-    public ResponseEntity<Void> updateUser(@PathVariable("userId") String userId, @RequestBody UserEntity user) {
-        userService.update(userId, user);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
     @GetMapping("/current-username")
     public ResponseEntity<String> getUsername() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
