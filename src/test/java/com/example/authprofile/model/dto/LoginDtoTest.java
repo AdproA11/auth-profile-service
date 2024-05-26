@@ -7,28 +7,28 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-public class LoginDtoTest {
+class LoginDtoTest {
     private LoginDto loginDto;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         loginDto = new LoginDto();
     }
 
     @Test
-    public void testNotNull() {
+    void testNotNull() {
         assertNotNull(loginDto);
     }
 
     @Test
-    public void testGetSetUsername() {
+    void testGetSetUsername() {
         String username = "testUser";
         loginDto.setUsername(username);
         assertEquals(username, loginDto.getUsername());
     }
 
     @Test
-    public void testGetSetPassword() {
+    void testGetSetPassword() {
         String password = "testPassword";
         loginDto.setPassword(password);
         assertEquals(password, loginDto.getPassword());

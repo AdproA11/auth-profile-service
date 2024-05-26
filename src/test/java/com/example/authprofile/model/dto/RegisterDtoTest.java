@@ -6,35 +6,35 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class RegisterDtoTest {
+class RegisterDtoTest {
     private RegisterDto registerDto;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         registerDto = new RegisterDto();
     }
 
     @Test
-    public void testNotNull() {
+    void testNotNull() {
         assertNotNull(registerDto);
     }
 
     @Test
-    public void testGetSetUsername() {
+    void testGetSetUsername() {
         String username = "testUser";
         registerDto.setUsername(username);
         assertEquals(username, registerDto.getUsername());
     }
 
     @Test
-    public void testGetSetPassword() {
+    void testGetSetPassword() {
         String password = "testPassword";
         registerDto.setPassword(password);
         assertEquals(password, registerDto.getPassword());
     }
 
     @Test
-    public void testGetSetType() {
+    void testGetSetType() {
         String type = "testType";
         registerDto.setType(type);
         assertEquals(type, registerDto.getType());
@@ -103,17 +103,5 @@ public class RegisterDtoTest {
 
         assertEquals(registerDto1.hashCode(), registerDto2.hashCode());
     }
-
-    // test toString
-    // @Test
-    // void testToString() {
-    // RegisterDto registerDto = new RegisterDto();
-    // registerDto.setUsername("testUser");
-    // registerDto.setPassword("testPassword");
-    // registerDto.setType("testType");
-
-    // assertEquals("RegisterDto(username=testUser, password=testPassword,
-    // type=testType)", registerDto.toString());
-    // }
 
 }

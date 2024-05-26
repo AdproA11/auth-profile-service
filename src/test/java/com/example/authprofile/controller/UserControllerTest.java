@@ -30,7 +30,7 @@ class UserControllerTest {
     private UserController userController;
 
     public UserControllerTest() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test

@@ -1,7 +1,6 @@
 package com.example.authprofile.model.dto;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
@@ -14,15 +13,6 @@ class AuthResponseDtoTest {
 
         assertEquals("Bearer ", authResponseDto.getTokenType());
     }
-
-    // @Test
-    // void testConstructor() {
-    // String accessToken = "testToken";
-    // AuthResponseDto authResponseDto = new AuthResponseDto(accessToken);
-
-    // assertEquals(accessToken, authResponseDto.getAccessToken());
-    // assertEquals("Bearer ", authResponseDto.getTokenType());
-    // }
 
     // test equals method
     @Test
@@ -60,16 +50,6 @@ class AuthResponseDtoTest {
         assertEquals(authResponseDto1.hashCode(), authResponseDto2.hashCode());
     }
 
-    // test toString method
-    // @Test
-    // void testToString() {
-    // String accessToken = "testToken";
-    // AuthResponseDto authResponseDto = new AuthResponseDto(accessToken);
-
-    // assertEquals("AuthResponseDto(accessToken=testToken, tokenType=Bearer )",
-    // authResponseDto.toString());
-    // }
-
     // test canEqual
     @Test
     void testCanEqual() {
@@ -77,6 +57,10 @@ class AuthResponseDtoTest {
         AuthResponseDto authResponseDto = new AuthResponseDto(accessToken);
 
         assertEquals(authResponseDto, authResponseDto);
+
+        AuthResponseDto authResponseDto2 = new AuthResponseDto(accessToken);
+
+        assertEquals(authResponseDto, authResponseDto2);
     }
 
     // test setAccessToken
@@ -87,6 +71,8 @@ class AuthResponseDtoTest {
 
         String newAccessToken = "newTestToken";
         authResponseDto.setAccessToken(newAccessToken);
+
+        assertEquals(newAccessToken, authResponseDto.getAccessToken());
     }
 
     // test setTokenType
@@ -97,5 +83,7 @@ class AuthResponseDtoTest {
 
         String tokenType = "newBearer";
         authResponseDto.setTokenType(tokenType);
+
+        assertEquals(tokenType, authResponseDto.getTokenType());
     }
 }
