@@ -11,27 +11,21 @@ import java.util.Date;
 
 @Component
 public class JWTGenerator {
-    private static final String SECRET_KEY = "secret";
-
     public String generateToken(Authentication authentication) {
         String username = authentication.getName();
         Date currentDate = new Date();
         Date expireDate = new Date(currentDate.getTime() + SecurityConstants.JWT_EXPIRATION);
-
-        String token = Jwts.builder()
+        return Jwts.builder()
                 .setSubject(username)
                 .setIssuedAt(new Date())
                 .setExpiration(expireDate)
-                .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
+                .signWith(SignatureAlgorithm.HS512, "secret")
                 .compact();
-        System.out.println("New token :");
-        System.out.println("token is " + token);
-        return token;
     }
 
     public String getUsernameFromJWT(String token) {
         Claims claims = Jwts.parser()
-                .setSigningKey(SECRET_KEY)
+                .setSigningKey("secret")
                 .parseClaimsJws(token)
                 .getBody();
         return claims.getSubject();
@@ -40,7 +34,7 @@ public class JWTGenerator {
     public boolean validateToken(String token) {
         try {
             Jwts.parser()
-                    .setSigningKey(SECRET_KEY)
+                    .setSigningKey("secret")
                     .parseClaimsJws(token);
             System.out.println("validate token " + token);
             return true;
