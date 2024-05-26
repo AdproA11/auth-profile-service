@@ -16,6 +16,11 @@ public class JWTGenerator {
     // jwt config object
     private JWTConfig jwtConfig;
 
+    // make jwtconfig not null
+    public JWTGenerator(JWTConfig jwtConfig) {
+        this.jwtConfig = jwtConfig;
+    }
+
     public String generateToken(Authentication authentication) {
         String username = authentication.getName();
         Date currentDate = new Date();
@@ -41,11 +46,16 @@ public class JWTGenerator {
             Jwts.parser()
                     .setSigningKey(jwtConfig.getSecret())
                     .parseClaimsJws(token);
-            System.out.println("validate token " + token);
             return true;
         } catch (Exception ex) {
             throw new AuthenticationCredentialsNotFoundException("JWT was exprired or incorrect",
                     ex.fillInStackTrace());
         }
+    }
+
+    public static void main(String[] args) {
+        // print jwt config secret
+        JWTConfig jwtConfig = new JWTConfig();
+        System.out.println(jwtConfig.getSecret());
     }
 }
