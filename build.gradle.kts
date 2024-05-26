@@ -10,6 +10,16 @@ plugins {
 group = "com.example"
 version = "0.0.1-SNAPSHOT"
 
+sonarqube {
+    properties {
+        property("sonar.projectKey", "AdproA11_auth-profile-service")
+        property("sonar.sources", "src/main")
+        property("sonar.tests", "src/test")
+        property("sonar.java.coveragePlugin", "jacoco")
+        property("sonar.jacoco.reportPaths", "build/jacoco/test.exec")
+    }
+}
+
 java {
         sourceCompatibility = JavaVersion.VERSION_21
         toolchain {
