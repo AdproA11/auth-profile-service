@@ -97,9 +97,10 @@ public class AuthController {
         System.out.println("type = " + registerDto.getType());
         System.out.println("name = " + registerDto.getName());
 
-        if (registerDto.getUsername() == null) {
-            return new ResponseEntity<>("Username must not be null!", HttpStatus.BAD_REQUEST);
-        }
+        // if (registerDto.getUsername() == null) {
+        // return new ResponseEntity<>("Username must not be null!",
+        // HttpStatus.BAD_REQUEST);
+        // }
 
         if (userService.findByUsername(registerDto.getUsername()).isPresent()) {
             return new ResponseEntity<>("Username is taken!", HttpStatus.BAD_REQUEST);
