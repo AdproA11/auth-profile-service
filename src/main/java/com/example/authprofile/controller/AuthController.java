@@ -73,6 +73,15 @@ public class AuthController {
         return new ResponseEntity<>("Logout success!", HttpStatus.OK);
     }
 
+    @GetMapping
+    public ModelAndView register(Model model) {
+        RegisterDto registerDto = new RegisterDto();
+        model.addAttribute("registerdto", registerDto);
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("register.html");
+        return modelAndView;
+    }
+
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody RegisterDto registerDto) {
         if (userService.findByUsername(registerDto.getUsername()).isPresent()) {
