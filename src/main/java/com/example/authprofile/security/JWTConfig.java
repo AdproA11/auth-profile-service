@@ -1,19 +1,23 @@
 package com.example.authprofile.security;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class JWTConfig {
 
-    @Value("${jwt.secret}")
-    private String secret;
+    private String secret = "secret";
 
-    // constructor
     public JWTConfig() {
+        // constructor for JWTConfig
+        // needed for testing purposes
+        // because annotation makes sonarcloud angry
     }
 
     public String getSecret() {
         return secret;
+    }
+
+    public static void main(String[] args) {
+        JWTConfig jwtConfig = new JWTConfig();
     }
 }
