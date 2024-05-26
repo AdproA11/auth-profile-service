@@ -39,6 +39,12 @@ Terakhir, ini adalah overall score saya.
 - ISP: UserService menyediakan method-method yang diperlukan
 - DIP: Pada AuthController, dependency injection dilakukan dengan constructor.
 
+# Coverage
+
+Berikut code coverage
+
+![alt text](images/jacocoCoverage.png)
+
 </details>
 
 <details close>
