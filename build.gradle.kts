@@ -3,8 +3,7 @@ plugins {
 	jacoco
 	id("org.springframework.boot") version "3.2.4"
 	id("io.spring.dependency-management") version "1.1.4"
-	// sonarqube
-	id("org.sonarqube") version "3.5.0.2730"
+	id("org.sonarqube") version "4.4.1.3373"
 }
 
 group = "com.example"
@@ -75,8 +74,9 @@ tasks.test {
 
 tasks.jacocoTestReport {
 	reports {
-		xml.required = true
-		html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml")) // specify your directory here
+		xml.required.set(true)
+		csv.required.set(true)
+		html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml"))
 	}
 	dependsOn(tasks.test)
 }
