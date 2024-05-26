@@ -67,17 +67,6 @@ public class AuthController {
         return new ResponseEntity<>(new AuthResponseDto(token), HttpStatus.OK);
     }
 
-    @PostMapping("login")
-    public String loginUser(@ModelAttribute("logindto") LoginDto logindto, Model model) {
-        if (userService.findByUsername(logindto.getUsername()).isPresent()) {
-            UserEntity user = userService.findByUsername(logindto.getUsername()).get();
-            if (passwordEncoder.matches(logindto.getPassword(), user.getPassword())) {
-                return "redirect:/postlogin";
-            }
-        }
-        return "redirect:/login";
-    }
-
     @GetMapping("/postlogin")
     public ModelAndView postlogin(Model model) {
         ModelAndView modelAndView = new ModelAndView();
