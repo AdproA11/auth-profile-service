@@ -90,17 +90,12 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@ModelAttribute RegisterDto registerDto) {
+    public ResponseEntity<String> register(@RequestBody RegisterDto registerDto) {
         System.out.println("RegisterDto received in controller:");
         System.out.println("username = " + registerDto.getUsername());
         System.out.println("password = " + registerDto.getPassword());
         System.out.println("type = " + registerDto.getType());
         System.out.println("name = " + registerDto.getName());
-
-        // if (registerDto.getUsername() == null) {
-        // return new ResponseEntity<>("Username must not be null!",
-        // HttpStatus.BAD_REQUEST);
-        // }
 
         if (userService.findByUsername(registerDto.getUsername()).isPresent()) {
             return new ResponseEntity<>("Username is taken!", HttpStatus.BAD_REQUEST);
